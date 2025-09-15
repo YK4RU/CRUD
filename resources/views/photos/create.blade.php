@@ -1,5 +1,9 @@
 <h1>Cadastro</h1>
 
+@if (session()->has('message'))
+    {{ session()->get('message') }}
+@endif
+
 <form action="{{ route('photos.store')}}" method="post" enctype="multipart/form-data">
     @csrf
     <p>

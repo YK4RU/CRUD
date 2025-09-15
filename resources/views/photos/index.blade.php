@@ -4,6 +4,6 @@
 
 <ul>
     @foreach ($photos as $photo)
-        <li>{{ $photo->NomedaImagem }}</li>
+        <li>{{ $photo->NomedaImagem }} | <a href="{{ route('photos.edit', ['photo' => $photo->id]) }}">Edit</a> | <a href="{{ route('photos.show', ['photo' => $photo->id]) }}">Delete</a></li>
     @endforeach
 </ul>

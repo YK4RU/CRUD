@@ -38,22 +38,27 @@ class PhotosController extends Controller
             'NomedaImagem'=> $request->input('NomedaImagem'),
             'UrldaImagem'=> $request->input('UrldaImagem'),
         ]);
+
+         if ($created){
+            return redirect()->back()->with('message', 'deu certo Ü');
+        }
+        return redirect()->back()->with('message', 'deu certo não Ü');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Photo $photo)
     {
-        //
+         return view('photos.delete', ['photo' => $photo]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Photo $photo)
     {
-        //
+        return view('photos.edit', ['photo' => $photo]);
     }
 
     /**
@@ -61,7 +66,12 @@ class PhotosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $updated = $this->photo->where('id', $id)->update($request->except(['_token', '_method']));
+
+        if ($updated){
+            return redirect()->back()->with('message', 'deu certo Ü');
+        }
+        return redirect()->back()->with('message', 'deu certo não Ü');
     }
 
     /**
@@ -69,6 +79,8 @@ class PhotosController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->photo->where('id', $id)->delete();
+
+        return redirect()->route('photos.index');
     }
 }
