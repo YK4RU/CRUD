@@ -17,8 +17,8 @@ class PhotosController extends Controller
 
     public function index()
     {
-        $photos = $this->photo->all();
-        return view ('photos.index', ['photos' => $photos]);
+        $photos = Photo::all();
+        return view ('photos.index', compact('photos'));
     }
 
     /**
@@ -34,15 +34,16 @@ class PhotosController extends Controller
      */
     public function store(Request $request)
     {
-        $created = $this->photo->create ([
+        $created = Photo::create ([
             'NomedaImagem'=> $request->input('NomedaImagem'),
             'UrldaImagem'=> $request->input('UrldaImagem'),
         ]);
 
          if ($created){
-            return redirect()->back()->with('message', 'deu certo Ü');
+            return redirect()->route('photos.index')->with('message', 'deu certo Ü');
+        }else{
+            return redirect()->back()->with('message', 'deu certo não Ü');
         }
-        return redirect()->back()->with('message', 'deu certo não Ü');
     }
 
     /**
@@ -50,15 +51,16 @@ class PhotosController extends Controller
      */
     public function show(Photo $photo)
     {
-         return view('photos.delete', ['photo' => $photo]);
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Photo $photo)
+    public function edit(Request $request, string $id)
     {
-        return view('photos.edit', ['photo' => $photo]);
+        $photo = Photo::findOrFail($id);
+        return view('photos.edit', compact('photos'));
     }
 
     /**
@@ -66,20 +68,22 @@ class PhotosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $updated = $this->photo->where('id', $id)->update($request->except(['_token', '_method']));
+        $photo = Photo::findOrFail($id);
+        $updated = $photo->Update($request->all());
 
         if ($updated){
-            return redirect()->back()->with('message', 'deu certo Ü');
+            return redirect()->route('photos.index')->with('message', 'deu certo Ü');
+        }else{
+            return redirect()->back()->with('message', 'deu certo não Ü');
         }
-        return redirect()->back()->with('message', 'deu certo não Ü');
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $this->photo->where('id', $id)->delete();
+        $photo = Photo::findOrFail($id);
+        $deleted = $photo->delete();
 
         return redirect()->route('photos.index');
     }
